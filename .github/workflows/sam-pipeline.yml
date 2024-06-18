@@ -18,4 +18,5 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
-      - run: sam build --use-container
+      - run: SAM_CLI_TELEMETRY=0 sam build --use-container
+      - run: SAM_CLI_TELEMETRY=0 sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name haya --capabilities CAPABILITY_IAM
