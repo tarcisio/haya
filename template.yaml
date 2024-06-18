@@ -20,7 +20,7 @@ Resources:
       Handler: app.lambda_handler
       Runtime: python3.12
       Architectures:
-      - arm64
+      - x86_64
       Events:
         Ping:
           Type: Api
