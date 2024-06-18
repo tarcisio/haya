@@ -8,6 +8,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.7
       - uses: actions/setup-python@v5.1.0
+        with:
+          python-version: '3.12'
       - uses: aws-actions/setup-sam@v2
-      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          use-installer: true
+      - uses: aws-actions/configure-aws-credentials@v4.0.2
+        with:
+          aws-access-key-id: ${{ vars.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ vars.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
       - run: sam build --use-container
