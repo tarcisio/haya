@@ -6,4 +6,4 @@ tasks:
       - go mod tidy
   push:
     cmds:
-      - git push origin master
+      - git push origin main
