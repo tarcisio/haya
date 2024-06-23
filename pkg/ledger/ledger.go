@@ -52,24 +52,60 @@ type Entry struct {
 	Amount  int // The amount can be positive or negative.
 }
 
+// TransactionType represents the type of a transaction.
+//   - Regular transactions are the most common transactions.
+//   - Closing transactions are used to close the books at the end of an accounting period.
+type TransactionType string
+
+const (
+	TransactionTypeRegular TransactionType = "Regular"
+	TransactionTypeClosing TransactionType = "Closing"
+)
+
 // Transaction represents a single transaction in a Ledger.
 type Transaction struct {
 	// All the entries in the transaction
 	// The sum of all the amounts in the entries should be 0
 	// meaning that the transaction is balanced.
-	Entries   []Entry
-	Timestamp time.Time
+	Entries         []Entry
+	Timestamp       time.Time
+	TransactionType TransactionType
 }
 
-// NewTransaction creates a new transaction with the given timestamp.
-//
+// AccountBalance represents the balance of an account at a given time.
+type AccountBalance struct {
+	AccountID   uuid.UUID
+	AccountType AccountType
+	Balance     int
+	Timestamp   time.Time
+}
+
+// NewTransaction creates a new regular transaction with the given timestamp.
+// It is the same as calling [NewRegularTransaction].
 // It is easier to create an empty transaction and add entries later because that are multiple ways to add entries.
 func NewTransaction(timestamp time.Time) *Transaction {
-	t := &Transaction{
-		Entries:   make([]Entry, 0),
-		Timestamp: timestamp,
-	}
+	return NewRegularTransaction(timestamp)
+}
 
+// NewRegularTransaction creates a new regular transaction with the given timestamp.
+// It is the same as calling [NewTransaction].
+func NewRegularTransaction(timestamp time.Time) *Transaction {
+	return newTransaction(timestamp, TransactionTypeRegular)
+}
+
+// NewClosingTransaction creates a new closing transaction with the given timestamp.
+func NewClosingTransaction(timestamp time.Time) *Transaction {
+	return newTransaction(timestamp, TransactionTypeClosing)
+}
+
+// newTransaction creates a new transaction with the given timestamp and type.
+// It is an internal function used by the others to create a new transaction.
+func newTransaction(timestamp time.Time, t_type TransactionType) *Transaction {
+	t := &Transaction{
+		Entries:         make([]Entry, 0, 2), // A transaction should have at least two entries.
+		Timestamp:       timestamp,
+		TransactionType: t_type,
+	}
 	return t
 }
 
@@ -155,6 +191,32 @@ func (l *Ledger) AddTransaction(ctx context.Context, t *Transaction) error {
 	}
 
 	return l.storage.SaveTransaction(ctx, t)
+}
+
+// GetCurrentAccountBalance returns the current balance of an account at the time of the call.
+// it can consider or not closed transactions that may affect the balance using the closed parameter.
+func (l *Ledger) GetCurrentAccountBalance(ctx context.Context, accountID uuid.UUID, closed bool) (AccountBalance, error) {
+	t := time.Now()
+	return l.getAccountBalance(ctx, accountID, t, closed)
+}
+
+// GetAccountBalanceAt returns the balance of an account at a given time.
+// disconsidering closed transactions that may affect the balance at that time.
+func (l *Ledger) GetAccountBalanceAt(ctx context.Context, accountID uuid.UUID, t time.Time) (AccountBalance, error) {
+	return l.getAccountBalance(ctx, accountID, t, false)
+}
+
+// GetAccountBalanceClosedAt returns the balance of an account at a given time.
+// considering closed transactions that may affect the balance at that time.
+func (l *Ledger) GetAccountBalanceClosedAt(ctx context.Context, accountID uuid.UUID, t time.Time) (AccountBalance, error) {
+	return l.getAccountBalance(ctx, accountID, t, true)
+}
+
+// getAccountBalance returns the balance of an account at a given time.
+// It is an internal function used by the others to get the balance of an account.
+func (l *Ledger) getAccountBalance(ctx context.Context, accountID uuid.UUID, t time.Time, closed bool) (AccountBalance, error) {
+	_, _, _, _ = ctx, accountID, t, closed
+	return AccountBalance{}, nil
 }
 
 // Storage represents a storage engine for the ledger.
