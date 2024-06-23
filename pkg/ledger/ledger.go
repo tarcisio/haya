@@ -7,19 +7,19 @@ import (
 	"github.com/google/uuid"
 )
 
-// AccountTypeType represents the type of an account.
+// AccountType represents the type of an account.
 //
 // It affects how the account is treated in the ledger.
 //   - Some accounts increase with a debit and decrease with a credit,
 //   - While others increase with a credit and decrease with a debit.
-type AccountTypeType string
+type AccountType string
 
 const (
-	AccountTypeAsset     AccountTypeType = "Asset"     // Asset accounts represent the resources owned by the business.
-	AccountTypeExpense   AccountTypeType = "Expense"   // Expense accounts represent the costs incurred by the business.
-	AccountTypeLiability AccountTypeType = "Liability" // Liability accounts represent the obligations of the business.
-	AccountTypeEquity    AccountTypeType = "Equity"    // Equity accounts represent the owner's claim on the assets of the business.
-	AccountTypeRevenue   AccountTypeType = "Revenue"   // Revenue accounts represent the income earned by the business.
+	AccountTypeAsset     AccountType = "Asset"     // Asset accounts represent the resources owned by the business.
+	AccountTypeExpense   AccountType = "Expense"   // Expense accounts represent the costs incurred by the business.
+	AccountTypeLiability AccountType = "Liability" // Liability accounts represent the obligations of the business.
+	AccountTypeEquity    AccountType = "Equity"    // Equity accounts represent the owner's claim on the assets of the business.
+	AccountTypeRevenue   AccountType = "Revenue"   // Revenue accounts represent the income earned by the business.
 )
 
 // Account represents a single account in a Ledger.
