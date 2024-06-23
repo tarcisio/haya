@@ -1,6 +1,7 @@
 version: '3'
 
 tasks:
-  build:
+  tidy:
     cmds:
-      - go build -v -i main.go
+      - go mod tidy
+
