@@ -1,6 +1,7 @@
 package ledger
 
 import (
+	"context"
 	"errors"
 	"time"
 
@@ -32,7 +33,7 @@ type Account struct {
 	ID          uuid.UUID
 	ParentID    uuid.UUID
 	Name        string
-	AccountType AccountTypeType
+	AccountType AccountType
 }
 
 // Entry represents a single entry in a Transaction.
@@ -148,15 +149,15 @@ func NewLedger(storage Storage) *Ledger {
 }
 
 // AddTransaction adds a transaction to the ledger.
-func (l *Ledger) AddTransaction(t *Transaction) error {
+func (l *Ledger) AddTransaction(ctx context.Context, t *Transaction) error {
 	if balanced, err := t.IsBalanced(); !balanced {
 		return err
 	}
 
-	return l.storage.SaveTransaction(t)
+	return l.storage.SaveTransaction(ctx, t)
 }
 
 // Storage represents a storage engine for the ledger.
 type Storage interface {
-	SaveTransaction(t *Transaction) error
+	SaveTransaction(ctx context.Context, t *Transaction) error
 }
