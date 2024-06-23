@@ -1,11 +1,11 @@
 package ledger_test
 
 import (
-	"haya/pkg/ledger"
 	"testing"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/tarcisio/haya/pkg/ledger"
 )
 
 func Test_Transactions(t *testing.T) {

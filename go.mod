@@ -1,4 +1,4 @@
-module haya
+module github.com/tarcisio/haya
 
 go 1.22.4
 
