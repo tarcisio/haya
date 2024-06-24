@@ -10,10 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: arduino/setup-task@v2
-      - uses: actions/setup-go@v5
+      - name: code checkout
+        uses: actions/checkout@v4
+      
+      - name: setup task
+        uses: arduino/setup-task@v2
+      
+      - name: setup go
+        uses: actions/setup-go@v5
         with:
           go-version: "1.22"
-      - name: Go coverage report
+      
+      - name: testing
+        run: task test
+      
+      - name: coverage report
         uses: ncruces/go-coverage-report@v0.3.0
