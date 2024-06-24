@@ -4,6 +4,18 @@ tasks:
   tidy:
     cmds:
       - go mod tidy
+  checkfmt:
+    deps: [tidy]
+    cmds:
+      - diff -u <(echo -n) <(gofmt -e -d pkg/)
+  build:
+    deps: [tidy]
+    cmds:
+      - go build ./...
+  test:
+    deps: [build]
+    cmds:
+      - go test -v ./...
   push:
     cmds:
       - git push origin main
