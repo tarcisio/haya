@@ -27,6 +27,7 @@ type Transaction struct {
 	Entries         []Entry
 	Timestamp       time.Time
 	TransactionType TransactionType
+	Metadata        map[string]string
 }
 
 // Entry represents a single immutable entry in a Transaction.
